@@ -1,0 +1,188 @@
+<!--
+  Copyright (c) 2006-2013, JGraph Ltd
+  
+  Hierarchical Layout example for mxGraph. This example demonstrates the
+  use of the hierarchical and organic layouts. Note that the hierarchical
+  layout requires another script tag in the head of the page.
+-->
+<html>
+<head>
+	<title>Hierarchical Layout example for mxGraph</title>
+
+	<!-- Sets the basepath for the library if not in same directory -->
+	<script type="text/javascript">
+		mxBasePath = 'src';
+	</script>
+
+	<!-- Loads and initializes the library -->
+	<script type="text/javascript" src="src/js/mxClient.js"></script>
+
+	<!-- Example code -->
+	<script type="text/javascript">
+
+		// Program starts here. Creates a sample graph in the
+		// DOM node with the specified ID. This function is invoked
+		// from the onLoad event handler of the document (see below).
+		function main(container)
+		{
+			// Checks if browser is supported
+			if (!mxClient.isBrowserSupported())
+			{
+				// Displays an error message if the browser is
+				// not supported.
+				mxUtils.error('Browser is not supported!', 200, false);
+			}
+			else
+			{
+				// Creates the graph inside the given container
+				var graph = new mxGraph(container);
+				
+				// Adds rubberband selection
+				new mxRubberband(graph);
+				
+				// Changes the default vertex style in-place
+				var style = graph.getStylesheet().getDefaultVertexStyle();
+				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+				style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
+				style[mxConstants.STYLE_PERIMETER_SPACING] = 6;
+				style[mxConstants.STYLE_ROUNDED] = true;
+				style[mxConstants.STYLE_SHADOW] = true;
+				
+				style = graph.getStylesheet().getDefaultEdgeStyle();
+				style[mxConstants.STYLE_ROUNDED] = true;
+
+				// Creates a layout algorithm to be used
+				// with the graph
+				var layout = new mxHierarchicalLayout(graph);
+				var organic = new mxFastOrganicLayout(graph);
+				organic.forceConstant = 120;
+				
+				var parent = graph.getDefaultParent();
+			
+				// Adds a button to execute the layout
+				var button = document.createElement('button');
+				mxUtils.write(button, 'Hierarchical');
+				mxEvent.addListener(button, 'click', function(evt)
+				{
+					layout.execute(parent);
+				});
+				document.body.appendChild(button);
+
+				// Adds a button to execute the layout
+				var button = document.createElement('button');
+				mxUtils.write(button, 'Organic');
+				
+				mxEvent.addListener(button, 'click', function(evt)
+				{
+					organic.execute(parent);
+				});
+				
+				document.body.appendChild(button);
+
+				// Disables basic selection and cell handling
+				//graph.setEnabled(false);
+				configureStylesheet(graph);
+				
+				// Load cells and layouts the graph
+				graph.getModel().beginUpdate();
+				try
+				{
+					var vCloud = graph.insertVertex(parent, null, 'Cloud', 0, 0, 80, 30, 'Cloud');
+					var vYoutube = graph.insertVertex(parent, null, 'Youtube', 0, 0, 80, 30, 'Youtube');
+					var vLinkedIn = graph.insertVertex(parent, null, 'LinkedIn', 0, 0, 80, 30, 'LinkedIn');
+					var vFacebook = graph.insertVertex(parent, null, 'Facebook', 0, 0, 80, 30, 'Facebook');
+					var vAmazon = graph.insertVertex(parent, null, 'Amazon', 0, 0, 80, 30, 'Amazon');
+					var vGoogle = graph.insertVertex(parent, null, 'Google', 0, 0, 80, 30, 'Google');
+
+					var e1 = graph.insertEdge(parent, null, '', vCloud, vYoutube);
+					var e2 = graph.insertEdge(parent, null, '', vCloud, vLinkedIn);
+					var e3 = graph.insertEdge(parent, null, '', vCloud, vFacebook);
+					var e4 = graph.insertEdge(parent, null, '', vCloud, vAmazon);
+					var e5 = graph.insertEdge(parent, null, '', vCloud, vGoogle);
+					
+					// Executes the layout
+					layout.execute(parent);
+				}
+				finally
+				{
+					// Updates the display
+					graph.getModel().endUpdate();
+				}
+
+				if (mxClient.IS_QUIRKS)
+				{
+					document.body.style.overflow = 'hidden';
+					new mxDivResizer(container);
+				}
+			}
+		};	// main
+
+		function configureStylesheet(graph)
+		{
+			var style = new Object();
+			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
+			style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+			style[mxConstants.STYLE_IMAGE] = 'images/cloud.png';
+			style[mxConstants.STYLE_FONTCOLOR] = '#FFFFFF';
+			graph.getStylesheet().putCellStyle('Cloud', style);
+			
+			style = mxUtils.clone(style);
+			style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_LABEL;
+			style[mxConstants.STYLE_STROKECOLOR] = '#000000';
+			style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+			style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+			style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_CENTER;
+			style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+			style[mxConstants.STYLE_IMAGE] = 'images/youtube.png';
+			style[mxConstants.STYLE_IMAGE_WIDTH] = '48';
+			style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
+			style[mxConstants.STYLE_SPACING_TOP] = '56';
+			style[mxConstants.STYLE_SPACING] = '8';
+			graph.getStylesheet().putCellStyle('Youtube', style);
+			
+			style = mxUtils.clone(style);
+			style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = mxConstants.ALIGN_BOTTOM;
+			style[mxConstants.STYLE_IMAGE] = 'images/linkedin.png';
+			delete style[mxConstants.STYLE_SPACING_TOP];
+			graph.getStylesheet().putCellStyle('LinkedIn', style);
+			
+			style = mxUtils.clone(style);
+			style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
+			style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_LEFT;
+			style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+			style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+			style[mxConstants.STYLE_IMAGE] = 'images/facebook.png';
+			style[mxConstants.STYLE_SPACING_LEFT] = '55';
+			style[mxConstants.STYLE_SPACING] = '4';
+			graph.getStylesheet().putCellStyle('Facebook', style);
+			
+			style = mxUtils.clone(style);
+			style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_RIGHT;
+			style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_RIGHT;
+			style[mxConstants.STYLE_IMAGE] = 'images/amazon.png';
+			delete style[mxConstants.STYLE_SPACING_LEFT];
+			style[mxConstants.STYLE_SPACING_RIGHT] = '55';
+			graph.getStylesheet().putCellStyle('Amazon', style);
+
+			style = mxUtils.clone(style);
+			style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_RIGHT;
+			style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_RIGHT;
+			style[mxConstants.STYLE_IMAGE] = 'images/google.png';
+			delete style[mxConstants.STYLE_SPACING_LEFT];
+			style[mxConstants.STYLE_SPACING_RIGHT] = '55';
+			graph.getStylesheet().putCellStyle('Google', style);
+
+		};	// configureStylesheet
+	</script>
+</head>
+
+<!-- Page passes the container for the graph to the program -->
+<body onload="main(document.getElementById('graphContainer'))" style="margin:4px;">
+
+	<!-- Creates a container for the graph with a grid wallpaper. Make sure to define the position
+		and overflow attributes! See comments on the adding of the size-listener on line 54 ff!  -->
+	<div id="graphContainer"
+		style="position:absolute;overflow:auto;top:36px;bottom:0px;left:0px;right:0px;border-top:gray 1px solid;">
+	</div>
+</body>
+</html>

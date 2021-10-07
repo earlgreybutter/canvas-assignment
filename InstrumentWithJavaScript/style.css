@@ -1,0 +1,19 @@
+#editMode {
+    cursor: pointer;
+}
+
+#correctionMode {
+    cursor: pointer;
+}
+
+#guidelineMode {
+    cursor: pointer;
+}
+
+#lengthCorrectionMode {
+    cursor: pointer;
+}
+
+#complete {
+    cursor: pointer;
+}

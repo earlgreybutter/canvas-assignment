@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- set base path -->
+<script type='text/javascript'>
+    mxBasePath = 'src';
+</script>
+<!-- get the mxGraph library -->
+<script type='text/javascript' src='src/js/mxClient.js'></script>
+<!-- create the mxGraph program -->
+<script type="text/javascript">
+    function main(container) {
+        //check supported
+        if(!mxClient.isBrowserSupported()){
+            mxUtils.error('Browser is Not Supported!', 200, null);
+        }
+        //create graph
+        else {
+            var graph = new mxGraph(container);
+            //hierarchical Layout
+            var layout = new mxHierarchicalLayout(graph);
+    
+            //update graph
+            graph.getModel().beginUpdate();
+            try {
+                // deal with xml
+                var strXML = mxUtils.readFile("sample.xml");
+
+                var doc = mxUtils.parseXml(strXML);  // Django
+                var decoder = new mxCodec(doc);
+                var node = doc.documentElement;
+                decoder.decode(node, graph.getModel());
+                // execute layout 
+                var parent = graph.getDefaultParent();
+                layout.execute(parent);
+            }
+            finally {
+                graph.getModel().endUpdate();
+            }
+        }
+    };
+</script>
+</head>
+<body onload="main(document.getElementById('graphContainer'))">
+    <!-- create the containing div -->
+    <div id = 'graphContainer' style="width: 960px;height: 500px;"></div>
+</body>
+</html>

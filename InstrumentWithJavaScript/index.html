@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link type="text/css" rel="stylesheet" href="./style.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.3.1/fabric.min.js"></script>
+
+        <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+        <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.3.1/firebase-firestore.js"></script>
+
+        <script type="text/javascript" src="./canvas.js"></script>
+        <script type="text/javascript" src="./ViewControl.js"></script>
+        <script type="text/javascript" src="./Firebase.js"></script>
+
+        
+    </head>
+    <body>
+        <div>
+            <h5>draw instrument example</h5>
+        </div>
+
+        <div>
+           <p id="editMode" onclick="editMode()">뒤로가기</p> 
+           <p id="correctionMode" onclick="correctionMode()">각도보정</p>
+           <p id="guidelineMode" onclick="guidelineMode()">가이드라인 생성</p> 
+           <p id="lengthCorrectionMode" onclick="lengthCorrectionMode()">길이 보정 <input id="lengthCorrectionM" type="number" onkeyup="mTextboxWatcher()"/> m  ↔  <input id="lengthCorrection" type="number" onkeyup="cmTextboxWatcher()"/> cm  </p>
+           <p id="complete" onclick="sendDatabase()">도면 생성 완료</p> 
+        </div>
+        <canvas id="c" width="2000" height="2000" style="border:1px solid #ccc"></canvas>
+    </body>
+
+</html>
